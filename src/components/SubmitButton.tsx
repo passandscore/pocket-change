@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
 import { createStyles, Button, Progress } from "@mantine/core";
+import { LoadingState } from "@/data-schema/enums";
 
 const useStyles = createStyles(() => ({
   button: {
@@ -27,12 +28,15 @@ const useStyles = createStyles(() => ({
 
 export function SubmitButton({
   handleSubmit,
+  setLoadingState,
+  loadingState,
 }: {
   handleSubmit: () => Promise<void>;
+  setLoadingState: (arg0: LoadingState) => void;
+  loadingState: LoadingState;
 }) {
   const { classes, theme } = useStyles();
   const [progress, setProgress] = useState(0);
-  const [loaded, setLoaded] = useState(false);
 
   const interval = useInterval(
     () =>
@@ -42,24 +46,32 @@ export function SubmitButton({
         }
 
         interval.stop();
-        setLoaded(true);
+        setLoadingState(LoadingState.LOADED);
         return 0;
       }),
     20
   );
+
+  useEffect(() => {
+    if (loadingState === LoadingState.ERROR) {
+      interval.stop();
+      setProgress(0);
+    }
+  }, [loadingState]);
+
   return (
     <Button
       className={classes.button}
       onClick={() => {
-        loaded ? setLoaded(false) : !interval.active && interval.start();
+        interval.start();
         handleSubmit();
       }}
-      color={loaded ? "teal" : theme.primaryColor}
+      color={"teal"}
     >
       <div className={classes.label}>
         {progress !== 0
           ? "Emptying your pockets"
-          : loaded
+          : loadingState === LoadingState.LOADED
           ? "Pockets emptied"
           : "Empty your pockets"}
       </div>

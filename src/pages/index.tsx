@@ -1,16 +1,13 @@
-import { Container, Flex } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { Inputs } from "@/components/Inputs";
-import { SubmitButton } from "@/components/SubmitButton";
 import { TokenModal } from "@/components/TokenModal";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import { IconX } from "@tabler/icons-react";
 import { showNotification } from "@mantine/notifications";
-
-//Todo: Check wallet validation. Show error if not valid
-//Todo: Modal presentation
-//Todo: change submit button states
+import { networkData } from "@/networkData";
+import { LoadingState } from "@/data-schema/enums";
 
 interface BalanceDetails {
   network: string;
@@ -26,11 +23,14 @@ interface BalanceDetails {
     };
     usdPrice: number;
   };
+  error?: string;
 }
 
 export default function Home() {
   const [openTokenModal, setOpenTokenModal] = useState(false);
   const [isConnectedWallet, setIsConnectedWallet] = useState(false);
+  const [loadingState, setLoadingState] = useState(LoadingState.NONE);
+  const [loadedSuccessfully, setLoadedSuccessfully] = useState(false);
   const [balanceDetails, setBalanceDetails] = useState([
     {
       network: "",
@@ -43,60 +43,27 @@ export default function Home() {
 
   const web3ApiKey = process.env.NEXT_PUBLIC_MORALIS_API_KEY;
   const headers = { accept: "application/json", "X-API-Key": web3ApiKey! };
-  const networkData = [
-    {
-      name: "Ethereum",
-      id: "0x1",
-      wrappedTokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    },
-    {
-      name: "Polygon",
-      id: "0x89",
-      wrappedTokenAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-    },
-    {
-      name: "Binance",
-      id: "0x38",
-      wrappedTokenAddress: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    },
-    {
-      name: "Avalanche",
-      id: "0xa86a",
-      wrappedTokenAddress: "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7",
-    },
-    {
-      name: "Fantom",
-      id: "0xfa",
-      wrappedTokenAddress: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
-    },
-    {
-      name: "Cronos",
-      id: "0x19",
-      wrappedTokenAddress: "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
-    },
-  ];
 
   const loadAllBalances = useCallback(async () => {
     const promises = networkData.map(async (network) => {
       try {
         const balance = await (
           await fetch(
-            "https://deep-index.moralis.io/api/v2/" +
-              address +
-              "/balance?chain=" +
-              network.id,
+            `https://deep-index.moralis.io/api/v2/${address}/balance?chain=${network.id}`,
             { headers }
           )
         ).json();
+
         const tokenPrice = await (
           await fetch(
-            "https://deep-index.moralis.io/api/v2/erc20/" +
-              network.wrappedTokenAddress +
-              "/price?chain=" +
-              network.id,
+            `https://deep-index.moralis.io/api/v2/erc20/${network.wrappedTokenAddress}/price?chain=${network.id}`,
             { headers }
           )
         ).json();
+
+        if (balance.message) {
+          return { error: balance.message };
+        }
 
         return {
           network: network.name,
@@ -112,35 +79,68 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const resetLoadingState = useCallback(() => {
+    setTimeout(() => {
+      setLoadingState(LoadingState.NONE);
+    }, 1000);
+  }, []);
+
   const handleSubmit = async (inputRef: any) => {
     // check if address is valid
     const addressInput = inputRef.current.value;
     if (!ethers.utils.isAddress(addressInput)) {
+      // set error state
+      setLoadingState(LoadingState.ERROR);
       showNotification({
         title: "Error",
         message: "Invalid address",
         color: "red",
         icon: <IconX />,
       });
+
+      resetLoadingState();
       return;
     }
 
     const balances = (await loadAllBalances()) as BalanceDetails[];
+
+    if (balances.some((balance) => balance.error)) {
+      setLoadedSuccessfully(false);
+      setLoadingState(LoadingState.ERROR);
+      resetLoadingState();
+
+      showNotification({
+        title: "Error",
+        message: balances[0].error,
+        color: "red",
+        icon: <IconX />,
+      });
+      return;
+    }
     setBalanceDetails(balances);
-    setOpenTokenModal(true);
+    setLoadedSuccessfully(true);
   };
 
   const OnModalClose = () => {
     setOpenTokenModal(false);
     setBalanceDetails([]);
     setIsConnectedWallet(false);
+    setLoadedSuccessfully(false);
   };
+
+  useEffect(() => {
+    if (loadedSuccessfully && loadingState === LoadingState.LOADED) {
+      setTimeout(() => {
+        setOpenTokenModal(true);
+        setLoadingState(LoadingState.NONE);
+      }, 500);
+    }
+  }, [loadedSuccessfully, loadingState, setOpenTokenModal]);
 
   return (
     <>
       <TokenModal
         openTokenModal={openTokenModal}
-        setOpenTokenModal={setOpenTokenModal}
         balanceDetails={balanceDetails}
         address={address}
         OnModalClose={OnModalClose}
@@ -151,6 +151,8 @@ export default function Home() {
           setIsConnectedWallet={setIsConnectedWallet}
           isConnectedWallet={isConnectedWallet}
           handleSubmit={handleSubmit}
+          setLoadingState={setLoadingState}
+          loadingState={loadingState}
         />
       </Container>
     </>

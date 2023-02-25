@@ -1,69 +1,27 @@
 // import Icon from "react-crypto-icons";
-import {
-  Avatar,
-  Badge,
-  Table,
-  Group,
-  Text,
-  Select,
-  ScrollArea,
-  Modal,
-  Flex,
-} from "@mantine/core";
+import { Avatar, Table, Group, Text, Modal, Flex, Box } from "@mantine/core";
 import { BalanceDetails } from "@/data-schema/BalanceDetails";
-import { EthIcon } from "@/crypto-icons/ethIcon";
+import { ETH, MATIC, BNB, AVAX, FTM, CRO } from "@/crypto-icons";
 import { useEnsAvatar } from "wagmi";
+import { keyframes } from "@mantine/core";
 
-interface UsersTableProps {
-  avatar: string;
-  name: string;
-  job: string;
-  email: string;
-  role: string;
-}
-[];
-
-const icons = [EthIcon];
-const results = [
-  {
-    avatar: "https://avatars.githubusercontent.com/u/70067?v=4",
-    name: "Artem Sapegin",
-    job: "Frontend Engineer",
-    email: "",
-    role: "Manager",
-  },
-  {
-    avatar: "https://avatars.githubusercontent.com/u/70067?v=4",
-    name: "Vadim Makeev",
-    job: "Frontend Engineer",
-    email: "",
-    role: "Collaborator",
-  },
-  {
-    avatar: "https://avatars.githubusercontent.com/u/11071?v=4",
-    name: "Max Stoiber",
-    job: "Frontend Engineer",
-    email: "",
-    role: "Contractor",
-  },
-  {
-    avatar: "https://avatars.githubusercontent.com/u/20046?v=4",
-    name: "Dan Abramov",
-    job: "Frontend Engineer",
-    email: "",
-    role: "Manager",
-  },
-] as UsersTableProps[];
+const iconDiameter = "35";
+const icons = [
+  ETH(iconDiameter, iconDiameter),
+  MATIC(iconDiameter, iconDiameter),
+  BNB(iconDiameter, iconDiameter),
+  AVAX(iconDiameter, iconDiameter),
+  FTM(iconDiameter, iconDiameter),
+  CRO(iconDiameter, iconDiameter),
+];
 
 export const TokenModal = ({
   openTokenModal,
-  setOpenTokenModal,
   balanceDetails,
   address,
   OnModalClose,
 }: {
   openTokenModal: boolean;
-  setOpenTokenModal: (open: boolean) => void;
   balanceDetails: BalanceDetails[];
   address: any;
   OnModalClose: () => void;
@@ -76,7 +34,7 @@ export const TokenModal = ({
     <tr key={`${item.network}-${index}`}>
       <td>
         <Text size="sm" weight={500}>
-          {item.network}
+          {icons[index]}
         </Text>
       </td>
 
@@ -114,7 +72,14 @@ export const TokenModal = ({
         overlayColor="rgba(0, 0, 0, 0.5)"
       >
         {/* Wallet Details */}
-        <Flex justify="center" mb={20}>
+        <Flex
+          justify="center"
+          mb={20}
+          style={{
+            borderBottom: "1px solid #eaeaea",
+            paddingBottom: 20,
+          }}
+        >
           <Group position="center">
             <Avatar
               src={data}
@@ -123,10 +88,10 @@ export const TokenModal = ({
               style={{ marginRight: 20 }}
             />
             <Flex direction="column">
-              <Text size="md" weight={500}>
+              <Text size="lg" weight={700} color="#489379">
                 Wallet
               </Text>
-              <Text size="sm" color="dimmed">
+              <Text size="sm" color="dimmed" weight={600}>
                 {address}
               </Text>
             </Flex>
@@ -146,7 +111,7 @@ export const TokenModal = ({
                 fw={700}
                 style={{ fontSize: 30 }}
               >
-                Grand Total
+                Total Pocket Change
               </Text>
               <Text size="xl" color="dimmed">
                 {`$${balanceDetails
@@ -162,7 +127,12 @@ export const TokenModal = ({
           </Group>
         </Flex>
 
-        <Table sx={{ minWidth: 400 }} verticalSpacing="xs" highlightOnHover>
+        <Table
+          sx={{ minWidth: 400 }}
+          verticalSpacing="xs"
+          highlightOnHover
+          striped
+        >
           <thead>
             <tr>
               <th>Asset</th>

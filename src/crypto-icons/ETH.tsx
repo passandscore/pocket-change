@@ -1,4 +1,4 @@
-export const EthIcon = (width: number, height: number) => (
+export const ETH = (width: string, height: string) => (
   <svg
     width={width}
     height={height}
@@ -6,7 +6,7 @@ export const EthIcon = (width: number, height: number) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_0_108)">
+    <g clipPath="url(#clip0_0_108)">
       <path
         d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z"
         fill="#627EEA"
@@ -14,24 +14,24 @@ export const EthIcon = (width: number, height: number) => (
       <path
         d="M16 4V12.87L23.497 16.22L16 4Z"
         fill="white"
-        fill-opacity="0.602"
+        fillOpacity="0.602"
       />
       <path d="M16.498 4L9 16.22L16.498 12.87V4Z" fill="white" />
       <path
         d="M16 22.352V28.379L23.502 18L16 22.352Z"
         fill="white"
-        fill-opacity="0.602"
+        fillOpacity="0.602"
       />
       <path d="M16.498 28.379V22.351L9 18L16.498 28.379Z" fill="white" />
       <path
         d="M16 20.701L23.497 16.348L16 13V20.701Z"
         fill="white"
-        fill-opacity="0.2"
+        fillOpacity="0.2"
       />
       <path
         d="M9 16.348L16.498 20.701V13L9 16.348Z"
         fill="white"
-        fill-opacity="0.602"
+        fillOpacity="0.602"
       />
     </g>
     <defs>
