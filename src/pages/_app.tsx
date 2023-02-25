@@ -15,7 +15,7 @@ import { WagmiConfig, createClient } from "wagmi";
 import { infuraProvider } from "@wagmi/core/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 import { configureChains, mainnet, goerli } from "@wagmi/core";
-import { MainHeader } from "@/components/Layout";
+import { Layout } from "@/components/Layout";
 import "@rainbow-me/rainbowkit/styles.css";
 
 const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY;
@@ -36,7 +36,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Grand Total",
+  appName: "Pocket Change",
   chains,
 });
 
@@ -45,24 +45,6 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
-
-const links = [
-  {
-    link: "/",
-    label: "Home",
-    links: [],
-  },
-  {
-    link: "/about",
-    label: "About",
-    links: [],
-  },
-  {
-    link: "/contact",
-    label: "Contact",
-    links: [],
-  },
-];
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
@@ -106,8 +88,9 @@ function MyApp({ Component, pageProps }: AppProps) {
               withGlobalStyles
               withNormalizeCSS
             >
-              <MainHeader links={links} />
-              <Component {...pageProps} />
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
             </MantineProvider>
           </ColorSchemeProvider>
         </RainbowKitProvider>

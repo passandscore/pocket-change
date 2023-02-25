@@ -1,6 +1,15 @@
 import { createGetInitialProps } from "@mantine/next";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 
+const background = {
+  backgroundImage: `url('/images/pocketchange-bg-trans.png')`,
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center",
+  width: "100vw",
+  height: "100vh",
+};
+
 const getInitialProps = createGetInitialProps();
 
 export default class _Document extends Document {
@@ -8,9 +17,9 @@ export default class _Document extends Document {
 
   render() {
     return (
-      <Html>
+      <Html style={{ ...background }}>
         <Head />
-        <body>
+        <body style={{ backgroundColor: "transparent" }}>
           <Main />
           <NextScript />
         </body>

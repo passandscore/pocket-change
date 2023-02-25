@@ -1,16 +1,15 @@
 import {
   createStyles,
-  Menu,
-  Center,
   Header,
   Container,
   Group,
-  Button,
   Burger,
+  Box,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconChevronDown } from "@tabler/icons-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { CustomConnectButton } from "@/components/CustomConnectButton";
+import Image from "next/image";
 
 const HEADER_HEIGHT = 60;
 
@@ -60,71 +59,46 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface HeaderActionProps {
-  links: {
-    link: string;
-    label: string;
-    links: { link: string; label: string }[];
-  }[];
-}
-
-export function MainHeader({ links }: HeaderActionProps) {
+export function Layout({ children }: { children: React.ReactNode }) {
   const { classes } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
-  const items = links.map((link) => {
-    const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link}>{item.label}</Menu.Item>
-    ));
-
-    if (menuItems) {
-      return (
-        <Menu key={link.label} trigger="hover" exitTransitionDuration={0}>
-          <Menu.Target>
-            <a
-              href={link.link}
-              className={classes.link}
-              onClick={(event) => event.preventDefault()}
-            >
-              <Center>
-                <span className={classes.linkLabel}>{link.label}</span>
-                <IconChevronDown size={12} stroke={1.5} />
-              </Center>
-            </a>
-          </Menu.Target>
-          <Menu.Dropdown>{menuItems}</Menu.Dropdown>
-        </Menu>
-      );
-    }
-
-    return (
-      <a
-        key={link.label}
-        href={link.link}
-        className={classes.link}
-        onClick={(event) => event.preventDefault()}
-      >
-        {link.label}
-      </a>
-    );
-  });
 
   return (
-    <Header height={HEADER_HEIGHT} sx={{ borderBottom: 0 }} mb={120}>
-      <Container className={classes.inner} fluid>
-        <Group>
-          <Burger
-            opened={opened}
-            onClick={toggle}
-            className={classes.burger}
-            size="sm"
-          />
-          {/* <MantineLogo size={28} /> */}
-        </Group>
-        <Group spacing={5} className={classes.links}>
-          {items}
-        </Group>
-        <ConnectButton />
-      </Container>
-    </Header>
+    <>
+      <Header
+        height={HEADER_HEIGHT}
+        sx={{
+          borderBottom: 0,
+          position: "fixed",
+          width: "100%",
+          backgroundColor: "transparent",
+        }}
+        mb={120}
+        mt={20}
+      >
+        <Container className={classes.inner} fluid>
+          <Group>
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              className={classes.burger}
+              size="sm"
+            />
+            {/* <MantineLogo size={28} /> */}
+            <Image
+              src="/images/pocketchange-logo.png"
+              alt="Find My NFT Logo"
+              width={375}
+              height={75}
+            />
+          </Group>
+
+          <Box mr={10}>
+            <CustomConnectButton />
+          </Box>
+        </Container>
+      </Header>
+      {children}
+    </>
   );
 }
