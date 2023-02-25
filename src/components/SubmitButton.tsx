@@ -26,9 +26,9 @@ const useStyles = createStyles(() => ({
 }));
 
 export function SubmitButton({
-  loadAllBalances,
+  handleSubmit,
 }: {
-  loadAllBalances: () => Promise<void>;
+  handleSubmit: () => Promise<void>;
 }) {
   const { classes, theme } = useStyles();
   const [progress, setProgress] = useState(0);
@@ -52,7 +52,7 @@ export function SubmitButton({
       className={classes.button}
       onClick={() => {
         loaded ? setLoaded(false) : !interval.active && interval.start();
-        loadAllBalances();
+        handleSubmit();
       }}
       color={loaded ? "teal" : theme.primaryColor}
     >

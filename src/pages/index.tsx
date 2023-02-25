@@ -2,8 +2,12 @@ import { Container, Flex } from "@mantine/core";
 import { Inputs } from "@/components/Inputs";
 import { SubmitButton } from "@/components/SubmitButton";
 import { TokenModal } from "@/components/TokenModal";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useCallback, useState } from "react";
+import { useAccount } from "wagmi";
+
+//Todo: Check wallet validation. Show error if not valid
+//Todo: Modal presentation
+//Todo: change submit button states
 
 interface BalanceDetails {
   network: string;
@@ -23,9 +27,8 @@ interface BalanceDetails {
 
 export default function Home() {
   const [openTokenModal, setOpenTokenModal] = useState(false);
-  const [address, setAddress] = useState(
-    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-  );
+  const [addressInput, setAddressInput] = useState("");
+  const [isConnectedWallet, setIsConnectedWallet] = useState(false);
   const [balanceDetails, setBalanceDetails] = useState([
     {
       network: "",
@@ -33,6 +36,8 @@ export default function Home() {
       tokenPrice: {},
     } as BalanceDetails,
   ]);
+
+  const { address } = useAccount();
 
   const web3ApiKey = process.env.NEXT_PUBLIC_MORALIS_API_KEY;
   const headers = { accept: "application/json", "X-API-Key": web3ApiKey! };
@@ -69,8 +74,8 @@ export default function Home() {
     },
   ];
 
-  const loadAllBalances = async () => {
-    networkData.forEach(async (network) => {
+  const loadAllBalances = useCallback(async () => {
+    const promises = networkData.map(async (network) => {
       try {
         const balance = await (
           await fetch(
@@ -91,33 +96,31 @@ export default function Home() {
           )
         ).json();
 
-        const result = {
+        return {
           network: network.name,
           balance: balance.balance / 1e18,
           tokenPrice,
         };
-        setBalanceDetails((prev) => [...prev, result]);
-
-        console.log("network: ", network.name);
-        console.log("balance: ", balance.balance / 1e18);
-
-        console.log("tokenPrice", tokenPrice);
-        setOpenTokenModal(true);
-        // console.log(
-        //   " Network Name - " +
-        //     network.name +
-        //     " Wallet Balance - " +
-        //     balance.balance / 1e18 +
-        //     " Token Price - $" +
-        //     tokenPrice.usdPrice.toLocaleString() +
-        //     "/" +
-        //     tokenPrice.nativePrice.symbol +
-        //     ""
-        // );
       } catch (error) {
         console.error(error);
       }
     });
+
+    return Promise.all(promises);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSubmit = async () => {
+    const balances = (await loadAllBalances()) as BalanceDetails[];
+    setBalanceDetails(balances);
+    setOpenTokenModal(true);
+  };
+
+  const OnModalClose = () => {
+    setOpenTokenModal(false);
+    setBalanceDetails([]);
+    setAddressInput("");
+    setIsConnectedWallet(false);
   };
 
   return (
@@ -127,11 +130,18 @@ export default function Home() {
         setOpenTokenModal={setOpenTokenModal}
         balanceDetails={balanceDetails}
         address={address}
+        OnModalClose={OnModalClose}
       />
       <Container size="sm">
-        <Inputs />
+        <Inputs
+          address={address}
+          addressInput={addressInput}
+          setAddressInput={setAddressInput}
+          setIsConnectedWallet={setIsConnectedWallet}
+          isConnectedWallet={isConnectedWallet}
+        />
         <Flex justify="right" pt={20}>
-          <SubmitButton loadAllBalances={loadAllBalances} />
+          <SubmitButton handleSubmit={handleSubmit} />
         </Flex>
       </Container>
     </>

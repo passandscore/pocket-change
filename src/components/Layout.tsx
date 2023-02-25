@@ -1,13 +1,4 @@
-import {
-  createStyles,
-  Header,
-  Container,
-  Group,
-  Burger,
-  Box,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { createStyles, Header, Container, Group, Box } from "@mantine/core";
 import { CustomConnectButton } from "@/components/CustomConnectButton";
 import Image from "next/image";
 
@@ -61,7 +52,6 @@ const useStyles = createStyles((theme) => ({
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { classes } = useStyles();
-  const [opened, { toggle }] = useDisclosure(false);
 
   return (
     <>
@@ -69,7 +59,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         height={HEADER_HEIGHT}
         sx={{
           borderBottom: 0,
-          position: "fixed",
           width: "100%",
           backgroundColor: "transparent",
         }}
@@ -78,13 +67,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <Container className={classes.inner} fluid>
           <Group>
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              className={classes.burger}
-              size="sm"
-            />
-            {/* <MantineLogo size={28} /> */}
             <Image
               src="/images/pocketchange-logo.png"
               alt="Find My NFT Logo"

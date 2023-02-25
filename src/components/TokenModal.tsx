@@ -60,59 +60,58 @@ export const TokenModal = ({
   setOpenTokenModal,
   balanceDetails,
   address,
+  OnModalClose,
 }: {
   openTokenModal: boolean;
   setOpenTokenModal: (open: boolean) => void;
   balanceDetails: BalanceDetails[];
-  address: string;
+  address: any;
+  OnModalClose: () => void;
 }) => {
   const { data } = useEnsAvatar({
-    address: `0x${address.slice(2)}`,
+    address: `0x${address?.slice(2)}`,
   });
 
-  console.log("balanceDetails", balanceDetails);
+  const rows = balanceDetails?.map((item, index) => (
+    <tr key={`${item.network}-${index}`}>
+      <td>
+        <Text size="sm" weight={500}>
+          {item.network}
+        </Text>
+      </td>
 
-  const rows = balanceDetails?.map(
-    (item, index) =>
-      index > 0 && (
-        <tr key={`${item.network}-${index}`}>
-          <td>
-            <Text size="sm" weight={500}>
-              {item.network}
-            </Text>
-          </td>
+      <td>
+        <Text size="sm" color="dimmed">
+          {item?.tokenPrice?.usdPrice?.toLocaleString()}
+        </Text>
+      </td>
 
-          <td>
-            <Text size="sm" color="dimmed">
-              {item?.tokenPrice?.usdPrice?.toLocaleString()}
-            </Text>
-          </td>
-
-          <td>
-            <Flex direction="column">
-              <Text size="sm" color="dimmed">
-                {`$${(
-                  item.balance * item?.tokenPrice?.usdPrice
-                ).toLocaleString()}`}
-              </Text>
-              <Text size="sm" color="dimmed">
-                {`${item.balance.toFixed(3)} ${
-                  item?.tokenPrice?.nativePrice?.symbol
-                }`}
-              </Text>
-            </Flex>
-          </td>
-        </tr>
-      )
-  );
+      <td>
+        <Flex direction="column">
+          <Text size="sm" color="dimmed">
+            {`$${(
+              item?.balance * item?.tokenPrice?.usdPrice
+            ).toLocaleString()}`}
+          </Text>
+          <Text size="sm" color="dimmed">
+            {`${item?.balance.toFixed(3)} ${
+              item?.tokenPrice?.nativePrice?.symbol
+            }`}
+          </Text>
+        </Flex>
+      </td>
+    </tr>
+  ));
 
   return (
     <>
       <Modal
         opened={openTokenModal}
-        onClose={() => setOpenTokenModal(false)}
+        onClose={OnModalClose}
         centered
-        size="xl"
+        size="lg"
+        style={{ borderColor: "white" }}
+        overlayColor="rgba(0, 0, 0, 0.5)"
       >
         {/* Wallet Details */}
         <Flex justify="center" mb={20}>
@@ -134,8 +133,36 @@ export const TokenModal = ({
           </Group>
         </Flex>
 
-        {/* <ScrollArea> */}
-        <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+        {/* Grand Total */}
+        <Flex justify="center" mb={20}>
+          <Group position="center">
+            <Flex direction="column" align="center">
+              <Text
+                variant="gradient"
+                gradient={{ from: "#f9d80d", to: "#fe7b17", deg: 45 }}
+                sx={{ fontFamily: "Greycliff CF, sans-serif" }}
+                ta="center"
+                // fz="xl"
+                fw={700}
+                style={{ fontSize: 30 }}
+              >
+                Grand Total
+              </Text>
+              <Text size="xl" color="dimmed">
+                {`$${balanceDetails
+
+                  ?.reduce(
+                    (acc, item) =>
+                      acc + item?.balance * item?.tokenPrice?.usdPrice,
+                    0
+                  )
+                  .toLocaleString()}`}
+              </Text>
+            </Flex>
+          </Group>
+        </Flex>
+
+        <Table sx={{ minWidth: 400 }} verticalSpacing="xs" highlightOnHover>
           <thead>
             <tr>
               <th>Asset</th>
@@ -145,7 +172,6 @@ export const TokenModal = ({
           </thead>
           <tbody>{rows}</tbody>
         </Table>
-        {/* </ScrollArea> */}
       </Modal>
     </>
   );

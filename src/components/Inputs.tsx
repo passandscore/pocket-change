@@ -1,4 +1,5 @@
 import { createStyles, TextInput, Switch, Flex, Box } from "@mantine/core";
+import { useEffect, useRef } from "react";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -20,8 +21,33 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function Inputs() {
+export function Inputs({
+  address,
+  addressInput,
+  setAddressInput,
+  setIsConnectedWallet,
+  isConnectedWallet,
+}: {
+  address: any;
+  addressInput: string;
+  setAddressInput: any;
+  setIsConnectedWallet: (arg0: boolean) => void;
+  isConnectedWallet: boolean;
+}) {
   const { classes } = useStyles();
+
+  const useConnectedWallet = () => {
+    setIsConnectedWallet(!isConnectedWallet);
+  };
+
+  useEffect(() => {
+    if (isConnectedWallet) {
+      setAddressInput(address!) as unknown as `0x${string}`;
+    } else {
+      setAddressInput("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, isConnectedWallet]);
 
   return (
     <Box mt={300} style={{ backgroundColor: "transparent !important" }}>
@@ -30,6 +56,8 @@ export function Inputs() {
           labelPosition="left"
           label="Use Connected Wallet"
           color="green"
+          checked={isConnectedWallet}
+          onChange={useConnectedWallet}
         />
       </Flex>
       <Box>
@@ -38,6 +66,8 @@ export function Inputs() {
           placeholder="0x..."
           defaultValue="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
           classNames={classes}
+          value={addressInput}
+          onChange={(e) => setAddressInput(e.currentTarget.value)}
         />
       </Box>
     </Box>
