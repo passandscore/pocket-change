@@ -1,5 +1,6 @@
 import { createStyles, TextInput, Switch, Flex, Box } from "@mantine/core";
 import { useEffect, useRef } from "react";
+import { SubmitButton } from "@/components/SubmitButton";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -23,16 +24,14 @@ const useStyles = createStyles((theme) => ({
 
 export function Inputs({
   address,
-  addressInput,
-  setAddressInput,
   setIsConnectedWallet,
   isConnectedWallet,
+  handleSubmit,
 }: {
   address: any;
-  addressInput: string;
-  setAddressInput: any;
   setIsConnectedWallet: (arg0: boolean) => void;
   isConnectedWallet: boolean;
+  handleSubmit: (arg0: any) => Promise<void>;
 }) {
   const { classes } = useStyles();
 
@@ -40,36 +39,43 @@ export function Inputs({
     setIsConnectedWallet(!isConnectedWallet);
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (isConnectedWallet) {
-      setAddressInput(address!) as unknown as `0x${string}`;
+      if (inputRef.current) {
+        inputRef.current.value = address;
+      }
     } else {
-      setAddressInput("");
+      if (inputRef.current) inputRef.current.value = "";
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, isConnectedWallet]);
 
   return (
-    <Box mt={300} style={{ backgroundColor: "transparent !important" }}>
-      <Flex direction="row-reverse" mb={20}>
-        <Switch
-          labelPosition="left"
-          label="Use Connected Wallet"
-          color="green"
-          checked={isConnectedWallet}
-          onChange={useConnectedWallet}
-        />
-      </Flex>
-      <Box>
-        <TextInput
-          label="Provide a wallet address"
-          placeholder="0x..."
-          defaultValue="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-          classNames={classes}
-          value={addressInput}
-          onChange={(e) => setAddressInput(e.currentTarget.value)}
-        />
+    <>
+      <Box mt={300} style={{ backgroundColor: "transparent !important" }}>
+        <Flex direction="row-reverse" mb={20}>
+          <Switch
+            labelPosition="left"
+            label="Use Connected Wallet"
+            color="green"
+            checked={isConnectedWallet}
+            onChange={useConnectedWallet}
+          />
+        </Flex>
+        <Box>
+          <TextInput
+            ref={inputRef}
+            label="Provide a wallet address"
+            placeholder="0x..."
+            classNames={classes}
+          />
+        </Box>
       </Box>
-    </Box>
+      <Flex justify="right" pt={20}>
+        <SubmitButton handleSubmit={() => handleSubmit(inputRef)} />
+      </Flex>
+    </>
   );
 }

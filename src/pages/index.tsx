@@ -30,7 +30,6 @@ interface BalanceDetails {
 
 export default function Home() {
   const [openTokenModal, setOpenTokenModal] = useState(false);
-  const [addressInput, setAddressInput] = useState("");
   const [isConnectedWallet, setIsConnectedWallet] = useState(false);
   const [balanceDetails, setBalanceDetails] = useState([
     {
@@ -113,8 +112,9 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (inputRef: any) => {
     // check if address is valid
+    const addressInput = inputRef.current.value;
     if (!ethers.utils.isAddress(addressInput)) {
       showNotification({
         title: "Error",
@@ -133,7 +133,6 @@ export default function Home() {
   const OnModalClose = () => {
     setOpenTokenModal(false);
     setBalanceDetails([]);
-    setAddressInput("");
     setIsConnectedWallet(false);
   };
 
@@ -149,14 +148,10 @@ export default function Home() {
       <Container size="sm">
         <Inputs
           address={address}
-          addressInput={addressInput}
-          setAddressInput={setAddressInput}
           setIsConnectedWallet={setIsConnectedWallet}
           isConnectedWallet={isConnectedWallet}
+          handleSubmit={handleSubmit}
         />
-        <Flex justify="right" pt={20}>
-          <SubmitButton handleSubmit={handleSubmit} />
-        </Flex>
       </Container>
     </>
   );
