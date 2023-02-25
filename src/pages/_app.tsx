@@ -17,6 +17,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { configureChains, mainnet, goerli } from "@wagmi/core";
 import { Layout } from "@/components/Layout";
 import "@rainbow-me/rainbowkit/styles.css";
+import { NotificationsProvider } from "@mantine/notifications";
 
 const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY;
 
@@ -88,9 +89,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               withGlobalStyles
               withNormalizeCSS
             >
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
+              <NotificationsProvider autoClose={false} position="bottom-left">
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </NotificationsProvider>
             </MantineProvider>
           </ColorSchemeProvider>
         </RainbowKitProvider>

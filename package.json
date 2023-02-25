@@ -16,6 +16,7 @@
     "@mantine/hooks": "^5.10.4",
     "@mantine/modals": "^5.10.4",
     "@mantine/next": "^5.10.4",
+    "@mantine/notifications": "^5.10.4",
     "@rainbow-me/rainbowkit": "^0.11.0",
     "@svgr/webpack": "^6.5.1",
     "@tabler/icons": "^2.5.0",

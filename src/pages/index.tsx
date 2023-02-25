@@ -4,6 +4,9 @@ import { SubmitButton } from "@/components/SubmitButton";
 import { TokenModal } from "@/components/TokenModal";
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import { IconX } from "@tabler/icons-react";
+import { showNotification } from "@mantine/notifications";
 
 //Todo: Check wallet validation. Show error if not valid
 //Todo: Modal presentation
@@ -111,6 +114,17 @@ export default function Home() {
   }, []);
 
   const handleSubmit = async () => {
+    // check if address is valid
+    if (!ethers.utils.isAddress(addressInput)) {
+      showNotification({
+        title: "Error",
+        message: "Invalid address",
+        color: "red",
+        icon: <IconX />,
+      });
+      return;
+    }
+
     const balances = (await loadAllBalances()) as BalanceDetails[];
     setBalanceDetails(balances);
     setOpenTokenModal(true);
