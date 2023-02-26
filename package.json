@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
+    "@emotion/styled": "^11.10.6",
     "@mantine/core": "^5.10.4",
     "@mantine/ds": "^5.10.4",
     "@mantine/hooks": "^5.10.4",
@@ -36,6 +37,7 @@
     "react-crypto-icons": "^1.0.5",
     "react-dom": "18.2.0",
     "typescript": "4.9.5",
+    "usehooks-ts": "2.6.0",
     "wagmi": "^0.11.7",
     "webpack": "^5.75.0"
   }

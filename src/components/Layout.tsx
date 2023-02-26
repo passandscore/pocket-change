@@ -1,6 +1,7 @@
 import { createStyles, Header, Container, Group, Box } from "@mantine/core";
 import { CustomConnectButton } from "@/components/CustomConnectButton";
 import Image from "next/image";
+import { SocialsMenu } from "@/components/Socials/SocialsMenu";
 
 const HEADER_HEIGHT = 60;
 
@@ -81,6 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </Container>
       </Header>
       {children}
+      <SocialsMenu />
     </>
   );
 }

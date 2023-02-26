@@ -1,38 +1,110 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<html>
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-## Getting Started
+# Pocket Change
 
-First, run the development server:
+<p align="center">
+  <a ><img src="public/images/readme/summary-modal.png" alt="summary"></a></p>
+</p>
+  <table style="width:100%">
+    <thead>
+      <tr>
+        <th>Language</th>
+        <th>Built With</th>
+        <th>Styled With</th>
+        <th>Blockchain Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="https://www.typescriptlang.org/">Typescript</a></td>
+        <td><a href="https://nextjs.org/">Next.js</a></td>
+        <td><a href="https://mantine.dev/">Mantine</a></td>
+        <td><a href="https://admin.moralis.io/">Moralis</a></td>
+      </tr>
+    </tbody>
+  </table>
+<hr />
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+<h2 style="color:orange">About The Project</h2>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<p>
+  I got tired of not having a clean and easy way to review my wallet balances cross-chain. With a little help from Moralis, I was able to do just that effortlessly. 
+</p>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+<hr />
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<h2 style="color:orange">What I learned</h2>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+<p>
+  At this point I am fairly new to Moralis. I must say that they made it really easy to get up and running with their web3 api. This is my second project using Mantine. Take a look at my <a href="https://github.com/passandscore/find-my-nft" target="_blank">Find My NFT</a> project to see how I used it there. I have been using Next.js for a while now and I am still amazed at how easy it is to get up and running with a new project. Typescript is a must for me. I love the type safety that it provides.
+</p>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<hr />
 
-## Learn More
+<h2 style="color:orange">Installation</h2>
 
-To learn more about Next.js, take a look at the following resources:
+<p>
+  <strong>You will be up and running in 3 simple steps</strong>
+</p>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<pre>
+Step 1
+git clone https://github.com/passandscore/pocket-change
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Step 2
+yarn run dev
 
-## Deploy on Vercel
+Step 3
+Open your browser and go to http://localhost:3000/
+</pre>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<hr />
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<h2 style="color:orange">Enviroment Variables</h2>
+
+<pre>
+Create a .env file on the root of the project and add the following
+
+NEXT_PUBLIC_MORALIS_API_KEY="<'YOUR_V1_KEY_HERE'>"
+
+</pre>
+
+<hr />
+
+<h1 style="color:orange">Features</h1>
+
+<strong>1. Search</strong>
+
+<h4>Functionality</h4>
+
+<ul style="margin-bottom:2rem">
+  <li>Find a balance by connected wallet</li>
+  <li>Find a balance by address</li>
+</ul>
+
+<hr />
+
+<strong>2. Summary</strong>
+
+<h4>Functionality</h4>
+
+<ul style="margin-bottom:2rem">
+  <li>View current token price.</li>
+  <li>View token balance in the native currency.</li>
+  <li>View token balance in USD.</li>
+</ul>
+
+<hr />
+
+<strong>You can find me on social media:</strong>
+
+<div style="position:flex;  padding-top:.2rem">
+<a href="https://www.linkedin.com/in/jason-schwarz-75b91482/" style="margin-right:1rem; color:orange" target="_blank"><img src="public/images/socials/linkedin.svg" alt="linkedin"/></a>
+<a href="https://twitter.com/passandscore" style="margin-right:1rem; color:orange" target="_blank"><img src="public/images/socials/twitter.svg" alt="twitter"/></a>
+<a href="https://discord.gg/jXPnv2t5mN" style="margin-right:1rem; color:orange;" target="_blank"><img src="public/images/socials/discord.svg" alt="discord"/></a>
+</div>
+
+</body>
+</html>

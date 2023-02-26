@@ -6,7 +6,7 @@ import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import { IconX } from "@tabler/icons-react";
 import { showNotification } from "@mantine/notifications";
-import { networkData } from "@/networkData";
+import { networkData } from "@/network-data";
 import { LoadingState } from "@/data-schema/enums";
 
 interface BalanceDetails {
@@ -31,6 +31,7 @@ export default function Home() {
   const [isConnectedWallet, setIsConnectedWallet] = useState(false);
   const [loadingState, setLoadingState] = useState(LoadingState.NONE);
   const [loadedSuccessfully, setLoadedSuccessfully] = useState(false);
+  const [validInputAddress, setValidInputAddress] = useState("");
   const [balanceDetails, setBalanceDetails] = useState([
     {
       network: "",
@@ -44,12 +45,12 @@ export default function Home() {
   const web3ApiKey = process.env.NEXT_PUBLIC_MORALIS_API_KEY;
   const headers = { accept: "application/json", "X-API-Key": web3ApiKey! };
 
-  const loadAllBalances = useCallback(async () => {
+  const loadAllBalances = useCallback(async (addressInput: string) => {
     const promises = networkData.map(async (network) => {
       try {
         const balance = await (
           await fetch(
-            `https://deep-index.moralis.io/api/v2/${address}/balance?chain=${network.id}`,
+            `https://deep-index.moralis.io/api/v2/${addressInput}/balance?chain=${network.id}`,
             { headers }
           )
         ).json();
@@ -88,6 +89,8 @@ export default function Home() {
   const handleSubmit = async (inputRef: any) => {
     // check if address is valid
     const addressInput = inputRef.current.value;
+    console.log(addressInput);
+    // return;
     if (!ethers.utils.isAddress(addressInput)) {
       // set error state
       setLoadingState(LoadingState.ERROR);
@@ -102,7 +105,7 @@ export default function Home() {
       return;
     }
 
-    const balances = (await loadAllBalances()) as BalanceDetails[];
+    const balances = (await loadAllBalances(addressInput)) as BalanceDetails[];
 
     if (balances.some((balance) => balance.error)) {
       setLoadedSuccessfully(false);
@@ -117,6 +120,7 @@ export default function Home() {
       });
       return;
     }
+    setValidInputAddress(addressInput);
     setBalanceDetails(balances);
     setLoadedSuccessfully(true);
   };
@@ -142,7 +146,7 @@ export default function Home() {
       <TokenModal
         openTokenModal={openTokenModal}
         balanceDetails={balanceDetails}
-        address={address}
+        address={validInputAddress}
         OnModalClose={OnModalClose}
       />
       <Container size="sm">

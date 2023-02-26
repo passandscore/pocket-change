@@ -26,6 +26,7 @@ export const TokenModal = ({
   address: any;
   OnModalClose: () => void;
 }) => {
+  console.log("address: ", address);
   const { data } = useEnsAvatar({
     address: `0x${address?.slice(2)}`,
   });
