@@ -15,9 +15,11 @@ import { WagmiConfig, createClient } from "wagmi";
 import { infuraProvider } from "@wagmi/core/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 import { configureChains, mainnet, goerli } from "@wagmi/core";
+import { fantom, polygon, avalanche, bsc } from "wagmi/chains";
 import { Layout } from "@/components/Layout";
 import "@rainbow-me/rainbowkit/styles.css";
 import { NotificationsProvider } from "@mantine/notifications";
+import { cronos } from "@/custom-chains";
 
 const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY;
 
@@ -27,7 +29,7 @@ const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY;
  * This provider to only available after the user has connected their wallet.
  */
 const { chains, provider } = configureChains(
-  [mainnet, goerli],
+  [mainnet, goerli, avalanche, polygon, bsc, fantom, cronos],
   [
     infuraProvider({ apiKey: infuraApiKey } as {
       apiKey: string;
