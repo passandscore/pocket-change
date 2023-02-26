@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
 import { createStyles, Button, Progress } from "@mantine/core";
 import { LoadingState } from "@/data-schema/enums";
+import { useViewportSize } from "@mantine/hooks";
+import { BREAKPOINT } from "@/constants";
 
 const useStyles = createStyles(() => ({
   button: {
@@ -37,6 +39,7 @@ export function SubmitButton({
 }) {
   const { classes, theme } = useStyles();
   const [progress, setProgress] = useState(0);
+  const { width } = useViewportSize();
 
   const interval = useInterval(
     () =>
@@ -67,6 +70,9 @@ export function SubmitButton({
         handleSubmit();
       }}
       color={"teal"}
+      style={{
+        marginRight: `${width < BREAKPOINT && "5px"}`,
+      }}
     >
       <div className={classes.label}>
         {progress !== 0

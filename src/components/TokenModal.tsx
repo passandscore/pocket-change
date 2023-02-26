@@ -1,9 +1,9 @@
-// import Icon from "react-crypto-icons";
 import { Avatar, Table, Group, Text, Modal, Flex, Box } from "@mantine/core";
 import { BalanceDetails } from "@/data-schema/BalanceDetails";
 import { ETH, MATIC, BNB, AVAX, FTM, CRO } from "@/crypto-icons";
 import { useEnsAvatar } from "wagmi";
-import { keyframes } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
+import { BREAKPOINT } from "@/constants";
 
 const iconDiameter = "35";
 const icons = [
@@ -26,10 +26,10 @@ export const TokenModal = ({
   address: any;
   OnModalClose: () => void;
 }) => {
-  console.log("address: ", address);
   const { data } = useEnsAvatar({
     address: `0x${address?.slice(2)}`,
   });
+  const { width } = useViewportSize();
 
   const rows = balanceDetails?.map((item, index) => (
     <tr key={`${item.network}-${index}`}>
@@ -68,36 +68,38 @@ export const TokenModal = ({
         opened={openTokenModal}
         onClose={OnModalClose}
         centered
-        size="lg"
+        size="xl"
         style={{ borderColor: "white" }}
         overlayColor="rgba(0, 0, 0, 0.5)"
       >
         {/* Wallet Details */}
-        <Flex
-          justify="center"
-          mb={20}
-          style={{
-            borderBottom: "1px solid #eaeaea",
-            paddingBottom: 20,
-          }}
-        >
-          <Group position="center">
-            <Avatar
-              src={data}
-              size="lg"
-              radius="xl"
-              style={{ marginRight: 20 }}
-            />
-            <Flex direction="column">
-              <Text size="lg" weight={700} color="#489379">
-                Wallet
-              </Text>
-              <Text size="sm" color="dimmed" weight={600}>
-                {address}
-              </Text>
-            </Flex>
-          </Group>
-        </Flex>
+        {width > BREAKPOINT && (
+          <Flex
+            justify="center"
+            mb={20}
+            style={{
+              borderBottom: "1px solid #eaeaea",
+              paddingBottom: 20,
+            }}
+          >
+            <Group position="center">
+              <Avatar
+                src={data}
+                size="lg"
+                radius="xl"
+                style={{ marginRight: 20 }}
+              />
+              <Flex direction="column">
+                <Text size="lg" weight={700} color="#489379">
+                  Wallet
+                </Text>
+                <Text size="sm" color="dimmed" weight={600}>
+                  {address}
+                </Text>
+              </Flex>
+            </Group>
+          </Flex>
+        )}
 
         {/* Grand Total */}
         <Flex justify="center" mb={20}>
@@ -128,12 +130,7 @@ export const TokenModal = ({
           </Group>
         </Flex>
 
-        <Table
-          sx={{ minWidth: 400 }}
-          verticalSpacing="xs"
-          highlightOnHover
-          striped
-        >
+        <Table verticalSpacing="xs" highlightOnHover striped>
           <thead>
             <tr>
               <th>Asset</th>

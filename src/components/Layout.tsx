@@ -2,6 +2,8 @@ import { createStyles, Header, Container, Group, Box } from "@mantine/core";
 import { CustomConnectButton } from "@/components/CustomConnectButton";
 import Image from "next/image";
 import { SocialsMenu } from "@/components/Socials/SocialsMenu";
+import { useViewportSize } from "@mantine/hooks";
+import { BREAKPOINT } from "@/constants";
 
 const HEADER_HEIGHT = 60;
 
@@ -53,9 +55,16 @@ const useStyles = createStyles((theme) => ({
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { classes } = useStyles();
+  const { width } = useViewportSize();
 
   return (
-    <>
+    <Box
+      style={{
+        maxWidth: 1000,
+        minWidth: 375,
+        margin: "0 auto",
+      }}
+    >
       <Header
         height={HEADER_HEIGHT}
         sx={{
@@ -67,14 +76,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
         mt={20}
       >
         <Container className={classes.inner} fluid>
-          <Group>
+          {width > BREAKPOINT ? (
             <Image
               src="/images/pocketchange-logo.png"
-              alt="Find My NFT Logo"
+              alt="Pocket Change Logo"
               width={375}
               height={75}
             />
-          </Group>
+          ) : (
+            <Image
+              src="/images/pocketchange-logo-sm.png"
+              alt="Pocket Change Logo"
+              width={125}
+              height={75}
+            />
+          )}
 
           <Box mr={10}>
             <CustomConnectButton />
@@ -82,7 +98,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </Container>
       </Header>
       {children}
-      <SocialsMenu />
-    </>
+      {width > BREAKPOINT && <SocialsMenu />}
+    </Box>
   );
 }

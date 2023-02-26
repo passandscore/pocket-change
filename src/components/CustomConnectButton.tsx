@@ -1,4 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useViewportSize } from "@mantine/hooks";
+import { BREAKPOINT } from "@/constants";
 
 const buttonStyles = {
   backgroundColor: "white",
@@ -12,6 +14,8 @@ const buttonStyles = {
 };
 
 export const CustomConnectButton = () => {
+  const { width } = useViewportSize();
+
   return (
     <ConnectButton.Custom>
       {({
@@ -46,7 +50,6 @@ export const CustomConnectButton = () => {
             {(() => {
               if (!connected) {
                 return (
-                  // #f9d80d, #fe7b17)
                   <button
                     onClick={openConnectModal}
                     type="button"
@@ -73,39 +76,41 @@ export const CustomConnectButton = () => {
               }
               return (
                 <div style={{ display: "flex", gap: 12 }}>
-                  <button
-                    onClick={openChainModal}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      ...buttonStyles,
-                    }}
-                    type="button"
-                  >
-                    {chain.hasIcon && (
-                      <div
-                        style={{
-                          background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4,
-                          backgroundColor: "red",
-                        }}
-                      >
-                        {chain.iconUrl && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            alt={chain.name ?? "Chain icon"}
-                            src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {chain.name}
-                  </button>
+                  {width > BREAKPOINT && (
+                    <button
+                      onClick={openChainModal}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        ...buttonStyles,
+                      }}
+                      type="button"
+                    >
+                      {chain.hasIcon && (
+                        <div
+                          style={{
+                            background: chain.iconBackground,
+                            width: 12,
+                            height: 12,
+                            borderRadius: 999,
+                            overflow: "hidden",
+                            marginRight: 4,
+                            backgroundColor: "red",
+                          }}
+                        >
+                          {chain.iconUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              alt={chain.name ?? "Chain icon"}
+                              src={chain.iconUrl}
+                              style={{ width: 12, height: 12 }}
+                            />
+                          )}
+                        </div>
+                      )}
+                      {chain.name}
+                    </button>
+                  )}
                   <button
                     onClick={openAccountModal}
                     type="button"
