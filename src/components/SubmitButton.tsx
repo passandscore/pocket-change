@@ -76,10 +76,10 @@ export function SubmitButton({
     >
       <div className={classes.label}>
         {progress !== 0
-          ? "Emptying your pockets"
+          ? "Loading balances"
           : loadingState === LoadingState.LOADED
-          ? "Pockets emptied"
-          : "Empty your pockets"}
+          ? "Balances loaded"
+          : "Load cross-chain balances"}
       </div>
       {progress !== 0 && (
         <Progress

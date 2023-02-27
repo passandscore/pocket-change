@@ -1,4 +1,4 @@
-import { Container } from "@mantine/core";
+import { Box, Container } from "@mantine/core";
 import { Inputs } from "@/components/Inputs";
 import { TokenModal } from "@/components/TokenModal";
 import { useCallback, useEffect, useState } from "react";
@@ -142,7 +142,7 @@ export default function Home() {
   }, [loadedSuccessfully, loadingState, setOpenTokenModal]);
 
   return (
-    <>
+    <Box>
       <TokenModal
         openTokenModal={openTokenModal}
         balanceDetails={balanceDetails}
@@ -159,6 +159,6 @@ export default function Home() {
           loadingState={loadingState}
         />
       </Container>
-    </>
+    </Box>
   );
 }
